@@ -254,8 +254,8 @@ The implementation plan will include:
 
 ## Save Your Plan
 
-Once Claude generates the plan, save it as:
-\`reports/implementation-plan-${report.evaluation.repositoryName.replace(/\\//g, '-')}-${new Date().toISOString().slice(0, 10)}.md\`
+Once Claude generates the plan, save it with a timestamped filename like:
+\`reports/implementation-plan-[repo-name]-[date].md\`
 
 ## Next Actions
 
