@@ -1,71 +1,140 @@
-import Image from "next/image";
-import { BlinkingDots } from "@/components/ui/blinking-dots";
+"use client";
+
+import { useState } from "react";
+import { EvaluationForm } from "@/components/evaluation-form";
+import { EvaluationResults } from "@/components/evaluation-results";
+import type { EvaluationResult } from "@/lib/types";
 
 export default function Home() {
+  const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Header */}
+      <header className="border-b bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">AgentGraphology</h1>
+              <p className="text-gray-600 mt-1">Profile Your Tools. Decide with Data.</p>
+            </div>
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://github.com/ypc-ux/jbuilds"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 font-medium"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              GitHub ↗
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {!evaluation ? (
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Evaluate Any GitHub Repository
+                </h2>
+                <p className="text-gray-600">
+                  Use the Business Integration Protocol to systematically score any tool, library, or service.
+                  Learn whether it's worth integrating into your business, what effort it requires, and what value
+                  it delivers.
+                </p>
+              </div>
+
+              <EvaluationForm onEvaluationComplete={setEvaluation} />
+
+              {/* Features */}
+              <div className="mt-12 pt-8 border-t">
+                <h3 className="font-semibold text-gray-900 mb-4">What We Evaluate</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="flex gap-3">
+                    <div className="text-2xl">⚡</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Developer Productivity</p>
+                      <p className="text-sm text-gray-600">Time savings and workflow efficiency</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="text-2xl">🏗️</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Technical Debt</p>
+                      <p className="text-sm text-gray-600">Code quality and maintainability impact</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="text-2xl">📊</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Business Fit</p>
+                      <p className="text-sm text-gray-600">Alignment with your goals</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="text-2xl">🛠️</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Implementation Effort</p>
+                      <p className="text-sm text-gray-600">Integration complexity and timeline</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="text-2xl">💰</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">ROI Analysis</p>
+                      <p className="text-sm text-gray-600">Cost-benefit and payoff ratio</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="text-2xl">🎯</div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Implementation Plan</p>
+                      <p className="text-sm text-gray-600">Phased integration roadmap</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Info Section */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                <h3 className="font-semibold text-blue-900 mb-2">Zero Cost AI</h3>
+                <p className="text-sm text-blue-800">
+                  Built on Ollama for completely local inference. No cloud API costs or data sharing.
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-6 border border-green-200">
+                <h3 className="font-semibold text-green-900 mb-2">Open Source</h3>
+                <p className="text-sm text-green-800">
+                  Full source code available. Run locally or deploy to your infrastructure.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <button
+              onClick={() => setEvaluation(null)}
+              className="mb-6 text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
             >
-              Learning
-            </a>{" "}
-            center.
+              ← New Evaluation
+            </button>
+            <EvaluationResults evaluation={evaluation} />
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t bg-gray-50 py-8 mt-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-sm text-gray-600">
+            Built with Business Integration Protocol • Open Source • Zero Cloud Costs
           </p>
         </div>
-        <BlinkingDots className="text-zinc-950 dark:text-zinc-50" />
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }
