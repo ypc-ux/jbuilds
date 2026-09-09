@@ -6,13 +6,18 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && echo 'Build complete'",
+    "type-check": "tsc --noEmit",
     "start": "node dist/index.js",
     "test": "vitest",
-    "db:migrate": "node dist/db/migrate.js",
+    "lint": "echo 'Linting not configured yet'",
+    "db:init": "tsx src/db/init.ts",
+    "db:migrate": "echo 'Migrations: update schema.ts and run db:init'",
     "ollama:setup": "echo 'Run: ollama pull mistral:7b-instruct'",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f api",
+    "docker:clean": "docker-compose down -v"
   },
   "keywords": [
     "integration",
