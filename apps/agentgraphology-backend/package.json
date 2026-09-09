@@ -1,0 +1,58 @@
+{
+  "name": "agentgraphology-backend",
+  "version": "1.0.0",
+  "description": "Million-dollar business: Open-source tool profiler using Business Integration Protocol + Ollama + Dify",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && echo 'Build complete'",
+    "type-check": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "lint": "echo 'Linting not configured yet'",
+    "db:init": "tsx src/db/init.ts",
+    "db:migrate": "echo 'Migrations: update schema.ts and run db:init'",
+    "ollama:setup": "echo 'Run: ollama pull mistral:7b-instruct'",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f api",
+    "docker:clean": "docker-compose down -v"
+  },
+  "keywords": [
+    "integration",
+    "evaluation",
+    "tool-profiling",
+    "business-integration-protocol",
+    "ollama",
+    "self-hosted",
+    "zero-cost"
+  ],
+  "author": "AgentGraphology Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "typescript": "^5.2.0",
+    "pg": "^8.11.0",
+    "octokit": "^3.1.0",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "zod": "^3.22.4",
+    "pino": "^8.16.1",
+    "pino-pretty": "^10.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.0",
+    "@types/pg": "^8.10.8",
+    "tsx": "^3.13.0",
+    "vitest": "^0.34.4",
+    "@vitest/ui": "^0.34.4",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
