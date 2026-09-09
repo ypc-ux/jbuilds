@@ -14,6 +14,8 @@ import { logger } from "./utils/logger.js";
 import { ScoringEngine } from "./scoring/engine.js";
 import GitHubService from "./services/github.js";
 import OllamaService from "./services/ollama.js";
+import { db } from "./db/client.js";
+import { EvaluationRepository, ComparisonRepository, UsageMetricsRepository } from "./db/repositories.js";
 import type {
   EvaluateRequest,
   EvaluateResponse,
@@ -58,7 +60,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.get("/api/health", async (req: Request, res: Response) => {
   try {
     const ollamaHealthy = await ollamaService.checkHealth();
-    const status = ollamaHealthy ? "healthy" : "degraded";
+    const dbHealthy = await db.healthCheck();
+
+    const allHealthy = ollamaHealthy && dbHealthy;
+    const status = allHealthy ? "healthy" : "degraded";
 
     const response: HealthResponse = {
       status: status as any,
@@ -68,12 +73,12 @@ app.get("/api/health", async (req: Request, res: Response) => {
         model: "mistral:7b-instruct",
       },
       database: {
-        connected: true, // Would check real DB in production
+        connected: dbHealthy,
       },
       version: "1.0.0",
     };
 
-    res.status(200).json(response);
+    res.status(allHealthy ? 200 : 503).json(response);
   } catch (error) {
     logger.error("Health check failed", { error });
     res.status(503).json({
@@ -219,6 +224,15 @@ app.post("/api/evaluate", async (req: Request, res: Response) => {
       decision: evaluation.scores.decision,
     });
 
+    // Save to database (async, don't block response)
+    try {
+      await EvaluationRepository.save(evaluation);
+      logger.info("Evaluation saved to database", { id: evaluation.id });
+    } catch (dbError) {
+      logger.warn("Failed to save evaluation to database", { error: dbError });
+      // Don't fail the request if database save fails
+    }
+
     const response: EvaluateResponse = {
       success: true,
       evaluation,
@@ -323,18 +337,50 @@ app.post("/api/compare", async (req: Request, res: Response) => {
  * Get evaluation by ID
  * GET /api/evaluations/:id
  */
-app.get("/api/evaluations/:id", (req: Request, res: Response) => {
+app.get("/api/evaluations/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    // In production, fetch from database
     logger.info("Fetching evaluation", { id });
+
+    const evaluation = await EvaluationRepository.getById(id);
+
+    if (!evaluation) {
+      return res.status(404).json({
+        success: false,
+        error: "Evaluation not found",
+      });
+    }
+
     res.status(200).json({
-      message: "Evaluation fetch not yet implemented",
-      id,
+      success: true,
+      evaluation,
     });
   } catch (error) {
     logger.error("Fetch failed", { error });
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Internal server error",
+    });
+  }
+});
+
+/**
+ * Get evaluation statistics
+ * GET /api/statistics
+ */
+app.get("/api/statistics", async (req: Request, res: Response) => {
+  try {
+    const stats = await EvaluationRepository.getStatistics();
+    res.status(200).json({
+      success: true,
+      statistics: stats,
+    });
+  } catch (error) {
+    logger.error("Statistics fetch failed", { error });
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Internal server error",
+    });
   }
 });
 
@@ -365,6 +411,17 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
+    // Initialize database
+    logger.info("Initializing database...");
+    try {
+      await db.initialize();
+      logger.info("Database initialized successfully");
+    } catch (dbError) {
+      logger.warn("Database initialization failed, continuing without persistence", {
+        error: dbError,
+      });
+    }
+
     // Check Ollama connection
     logger.info("Checking Ollama connection...");
     const ollamaReady = await ollamaService.checkHealth();
@@ -380,9 +437,11 @@ async function startServer() {
     app.listen(PORT, () => {
       logger.info(`🚀 AgentGraphology API running on http://localhost:${PORT}`);
       logger.info("📊 Endpoints:");
-      logger.info("  POST   /api/evaluate  - Evaluate a repository");
-      logger.info("  POST   /api/compare   - Compare repositories");
-      logger.info("  GET    /api/health    - Health check");
+      logger.info("  POST   /api/evaluate      - Evaluate a repository");
+      logger.info("  POST   /api/compare       - Compare repositories");
+      logger.info("  GET    /api/evaluations/:id - Get evaluation by ID");
+      logger.info("  GET    /api/statistics    - Get evaluation statistics");
+      logger.info("  GET    /api/health        - Health check");
       logger.info("💰 Infrastructure cost: $0/month (Ollama is free)");
     });
   } catch (error) {
@@ -390,6 +449,13 @@ async function startServer() {
     process.exit(1);
   }
 }
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received, shutting down gracefully...");
+  await db.close();
+  process.exit(0);
+});
 
 startServer();
 
