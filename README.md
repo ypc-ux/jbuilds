@@ -165,10 +165,17 @@ GITHUB_TOKEN=optional_for_higher_limits
 
 ## 📖 Documentation
 
+### Getting Started
 - **[SETUP.md](./SETUP.md)** - Complete setup and deployment guide
 - **[docs/INTEGRATION_PROTOCOL.md](./docs/INTEGRATION_PROTOCOL.md)** - Full protocol specification
-- **[docs/INTEGRATION_EXAMPLES.md](./docs/INTEGRATION_EXAMPLES.md)** - Real-world evaluations
 - **[docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md)** - 5-minute intro
+
+### Deployment & Infrastructure
+- **[docs/DEPLOYMENT_GUIDE.md](./docs/DEPLOYMENT_GUIDE.md)** - Railway, Render, Fly.io, AWS, Google Cloud alternatives
+- **[docs/REPOSITORY_ORGANIZATION.md](./docs/REPOSITORY_ORGANIZATION.md)** - Team naming conventions and structure
+
+### Examples & References
+- **[docs/INTEGRATION_EXAMPLES.md](./docs/INTEGRATION_EXAMPLES.md)** - Real-world evaluations
 - **[apps/agentgraphology-backend/README.md](./apps/agentgraphology-backend/README.md)** - Backend API docs
 
 ## 🚀 Deployment
