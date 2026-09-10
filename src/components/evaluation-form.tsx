@@ -51,44 +51,47 @@ export function EvaluationForm({ onEvaluationComplete, isLoading = false }: Eval
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="repoUrl" className="block text-sm font-medium text-gray-900 mb-2">
-          GitHub Repository URL
+        <label
+          htmlFor="repoUrl"
+          className="mb-2.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint"
+        >
+          GitHub repository URL
         </label>
-        <div className="relative">
-          <input
-            id="repoUrl"
-            type="text"
-            value={repoUrl}
-            onChange={(e) => setRepoUrl(e.target.value)}
-            placeholder="https://github.com/owner/repo"
-            disabled={loading || isLoading}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
-        <p className="mt-2 text-sm text-gray-600">
-          Enter any GitHub repository URL to analyze it against the Business Integration Protocol.
+        <input
+          id="repoUrl"
+          type="text"
+          value={repoUrl}
+          onChange={(e) => setRepoUrl(e.target.value)}
+          placeholder="https://github.com/owner/repo"
+          disabled={loading || isLoading}
+          className="w-full rounded-xl border border-line-bright bg-void px-4 py-3.5 font-mono text-sm text-ink placeholder:text-ink-faint focus:border-signal focus:outline-none disabled:opacity-50"
+        />
+        <p className="mt-2.5 text-sm text-ink-dim">
+          Any public repository. The evaluation runs against the Business Integration Protocol.
         </p>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800 font-medium">Error</p>
-          <p className="text-sm text-red-700 mt-1">{error}</p>
+        <div className="rounded-xl border border-verdict-avoid/40 bg-verdict-avoid/10 p-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-verdict-avoid">
+            Evaluation failed
+          </p>
+          <p className="mt-1.5 text-sm text-ink-dim">{error}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={loading || isLoading || !repoUrl.trim()}
-        className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full rounded-xl bg-signal px-6 py-3.5 text-sm font-semibold text-void transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {loading || isLoading ? (
           <span className="flex items-center justify-center gap-2">
-            <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            Evaluating...
+            <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-void border-t-transparent" />
+            Evaluating…
           </span>
         ) : (
-          "Evaluate Repository"
+          "Evaluate repository"
         )}
       </button>
     </form>

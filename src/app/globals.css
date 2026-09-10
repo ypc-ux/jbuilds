@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   AgentGraphology design system
+   Metaphor: a diagnostic instrument, not a SaaS brochure.
+   Dark, forensic, measurement-forward.
+   ============================================================ */
+
+@theme {
+  /* Surfaces — near-black with a cool undertone so the accent reads as signal */
+  --color-void: #08090c;
+  --color-base: #0c0e13;
+  --color-surface: #12141b;
+  --color-raised: #181b24;
+  --color-line: #232733;
+  --color-line-bright: #333949;
+
+  /* Text */
+  --color-ink: #e9ebf2;
+  --color-ink-dim: #a2a9bd;
+  --color-ink-faint: #6b7285;
+
+  /* Signal accent */
+  --color-signal: #7df9a8;
+  --color-signal-dim: #4ec27b;
+  --color-signal-glow: #7df9a833;
+
+  /* Verdict scale — scores map to recommendations, so this doubles as the data palette */
+  --color-verdict-strong: #7df9a8;
+  --color-verdict-good: #a8e85f;
+  --color-verdict-mixed: #ffd166;
+  --color-verdict-weak: #ff9f6b;
+  --color-verdict-avoid: #ff6b7a;
+
+  /* Type */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid display sizes */
+  --text-display: clamp(2.75rem, 7vw, 6.5rem);
+  --text-display--line-height: 0.94;
+  --text-display--letter-spacing: -0.04em;
+
+  --text-headline: clamp(2rem, 4.5vw, 3.75rem);
+  --text-headline--line-height: 1.02;
+  --text-headline--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-title--line-height: 1.12;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-readout: clamp(3rem, 9vw, 8rem);
+  --text-readout--line-height: 0.88;
+  --text-readout--letter-spacing: -0.05em;
+
+  /* Motion — one easing vocabulary across the whole site */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Deliberately NOT scroll-smooth: CSS smooth scrolling fights ScrollTrigger's
+     scrub calculations and makes pinned sections jitter. Next 16 no longer
+     strips this automatically, so it must stay off. */
+  scroll-behavior: auto;
+  background: var(--color-void);
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Pinned + horizontal sections push content wider than the viewport mid-tween */
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: var(--color-void);
+}
+
+/* Numeric readouts must not reflow while counting */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Hairline grid backdrop — reads as graph paper / instrument bezel */
+.grid-field {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 40%, #000 20%, transparent 75%);
+}
+
+/* Elements that animate in start hidden, but ONLY when JS will animate them.
+   The .motion-ready class is set by the scroll provider after GSAP takes over,
+   so a JS failure or a reduced-motion visitor still sees fully visible content. */
+.motion-ready [data-reveal],
+.motion-ready [data-reveal-child] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready [data-reveal],
+  .motion-ready [data-reveal-child] {
+    opacity: 1;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Focus visibility survives the dark theme */
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
