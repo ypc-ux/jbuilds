@@ -1,3 +1,8 @@
+---
+name: integration-advisor
+description: Analyze integration evaluation reports and create detailed, actionable implementation plans with phased approach, tickets, and risk assessment.
+---
+
 # Integration Advisor Agent
 
 **Role:** Integration Recommendation Specialist
