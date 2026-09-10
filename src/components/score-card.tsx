@@ -5,60 +5,48 @@ import type { DimensionScore } from "@/lib/types";
 interface ScoreCardProps {
   title: string;
   score: DimensionScore;
-  color?: "blue" | "green" | "purple" | "amber" | "red";
+  tone?: "strong" | "good" | "mixed" | "weak" | "avoid";
 }
 
-const colorClasses = {
-  blue: "bg-blue-50 border-blue-200 text-blue-900",
-  green: "bg-green-50 border-green-200 text-green-900",
-  purple: "bg-purple-50 border-purple-200 text-purple-900",
-  amber: "bg-amber-50 border-amber-200 text-amber-900",
-  red: "bg-red-50 border-red-200 text-red-900",
+const TONES = {
+  strong: "var(--color-verdict-strong)",
+  good: "var(--color-verdict-good)",
+  mixed: "var(--color-verdict-mixed)",
+  weak: "var(--color-verdict-weak)",
+  avoid: "var(--color-verdict-avoid)",
 };
 
-const progressClasses = {
-  blue: "bg-blue-500",
-  green: "bg-green-500",
-  purple: "bg-purple-500",
-  amber: "bg-amber-500",
-  red: "bg-red-500",
-};
-
-export function ScoreCard({ title, score, color = "blue" }: ScoreCardProps) {
+export function ScoreCard({ title, score, tone = "strong" }: ScoreCardProps) {
   const percentage = (score.score / score.maxScore) * 100;
-  const colorClass = colorClasses[color];
-  const progressClass = progressClasses[color];
+  const color = TONES[tone];
 
   return (
-    <div className={`rounded-lg border p-4 ${colorClass}`}>
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="font-semibold text-lg">{title}</h3>
-        <span className="text-sm font-bold">
+    <div className="rounded-xl border border-line bg-base p-5">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <h3 className="text-sm font-semibold text-ink text-pretty">{title}</h3>
+        <span className="shrink-0 font-mono text-sm tabular" style={{ color }}>
           {score.score}/{score.maxScore}
         </span>
       </div>
 
-      {/* Progress bar */}
-      <div className="mb-3 w-full bg-white/50 rounded-full h-2 overflow-hidden">
+      <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-line">
         <div
-          className={`h-full ${progressClass} transition-all duration-500`}
-          style={{ width: `${percentage}%` }}
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${percentage}%`, backgroundColor: color }}
         />
       </div>
 
-      {/* Reasoning */}
-      <p className="text-sm line-clamp-2 opacity-90">{score.reasoning}</p>
+      <p className="text-sm leading-relaxed text-ink-dim text-pretty">{score.reasoning}</p>
 
-      {/* Evidence */}
       {score.evidence && score.evidence.length > 0 && (
-        <div className="mt-2 space-y-1">
+        <ul className="mt-3 space-y-1.5">
           {score.evidence.slice(0, 2).map((item, idx) => (
-            <p key={idx} className="text-xs opacity-75 flex items-start gap-1">
-              <span className="mt-0.5">•</span>
+            <li key={idx} className="flex items-start gap-2 text-xs text-ink-faint">
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-line-bright" />
               <span>{item}</span>
-            </p>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

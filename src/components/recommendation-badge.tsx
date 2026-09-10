@@ -8,65 +8,54 @@ interface RecommendationBadgeProps {
   roiRatio: number;
 }
 
-const decisionConfig = {
+const DECISIONS = {
   INTEGRATE_IMMEDIATELY: {
-    label: "Integrate Immediately",
-    bgColor: "bg-green-100",
-    textColor: "text-green-800",
-    borderColor: "border-green-300",
-    icon: "✨",
-    description: "High value, clear ROI, low complexity",
+    label: "Integrate now",
+    color: "var(--color-verdict-strong)",
+    description: "High value, clear return, low complexity.",
   },
   INTEGRATE_SOON: {
-    label: "Integrate Soon",
-    bgColor: "bg-blue-100",
-    textColor: "text-blue-800",
-    borderColor: "border-blue-300",
-    icon: "⭐",
-    description: "Good value, manageable complexity",
+    label: "Integrate with scope limits",
+    color: "var(--color-verdict-mixed)",
+    description: "Good value, manageable complexity. Bound the scope before you start.",
   },
   EVALUATE_ALTERNATIVES: {
-    label: "Evaluate Alternatives",
-    bgColor: "bg-amber-100",
-    textColor: "text-amber-800",
-    borderColor: "border-amber-300",
-    icon: "🔍",
-    description: "Moderate value, higher effort required",
+    label: "Prototype first",
+    color: "var(--color-verdict-weak)",
+    description: "Moderate value against real effort. Prove it on something small.",
   },
   NOT_RECOMMENDED: {
-    label: "Not Recommended",
-    bgColor: "bg-red-100",
-    textColor: "text-red-800",
-    borderColor: "border-red-300",
-    icon: "❌",
-    description: "Low ROI or poor fit for your business",
+    label: "Do not integrate",
+    color: "var(--color-verdict-avoid)",
+    description: "The return does not cover what this costs to adopt and maintain.",
   },
 };
 
-export function RecommendationBadge({
-  decision,
-  score,
-  roiRatio,
-}: RecommendationBadgeProps) {
-  const config = decisionConfig[decision];
+export function RecommendationBadge({ decision, score, roiRatio }: RecommendationBadgeProps) {
+  const config = DECISIONS[decision];
 
   return (
-    <div className={`rounded-lg border-2 p-6 ${config.bgColor} ${config.borderColor}`}>
-      <div className="flex items-center gap-3 mb-2">
-        <span className="text-2xl">{config.icon}</span>
-        <h2 className={`text-2xl font-bold ${config.textColor}`}>{config.label}</h2>
-      </div>
+    <div
+      className="rounded-2xl border border-line bg-base p-7"
+      style={{ borderLeftWidth: 3, borderLeftColor: config.color }}
+    >
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">Verdict</p>
+      <h2 className="mt-3 text-title font-semibold text-pretty" style={{ color: config.color }}>
+        {config.label}
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-ink-dim text-pretty">{config.description}</p>
 
-      <p className={`text-sm mb-4 ${config.textColor} opacity-80`}>{config.description}</p>
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className="mt-7 grid grid-cols-2 gap-6 border-t border-line pt-6">
         <div>
-          <p className="text-xs opacity-60 uppercase tracking-wide">Total Score</p>
-          <p className={`text-3xl font-bold ${config.textColor}`}>{score}/100</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">Composite</p>
+          <p className="mt-1.5 font-mono text-3xl tabular" style={{ color: config.color }}>
+            {score}
+            <span className="text-lg text-ink-faint">/100</span>
+          </p>
         </div>
         <div>
-          <p className="text-xs opacity-60 uppercase tracking-wide">ROI Ratio</p>
-          <p className={`text-3xl font-bold ${config.textColor}`}>{roiRatio.toFixed(1)}:1</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">ROI ratio</p>
+          <p className="mt-1.5 font-mono text-3xl tabular text-ink">{roiRatio.toFixed(1)}:1</p>
         </div>
       </div>
     </div>
