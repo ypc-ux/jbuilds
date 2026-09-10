@@ -56,6 +56,27 @@ npm run dev
 
 See [SETUP.md](./SETUP.md) for detailed configuration and deployment guides.
 
+## 🎓 Intern Onboarding
+
+**Just joined the team?** Start here:
+
+1. **[docs/INTERN_ONBOARDING.md](./docs/INTERN_ONBOARDING.md)** - Complete overview of all 16 repos and getting started
+2. **[docs/INTERN_SETUP.md](./docs/INTERN_SETUP.md)** - Step-by-step environment setup (30 min)
+3. **[docs/INTERN_ARCHITECTURE.md](./docs/INTERN_ARCHITECTURE.md)** - How all the systems work together
+4. **[docs/INTERN_30_DAY_PLAN.md](./docs/INTERN_30_DAY_PLAN.md)** - Your 30-day roadmap to productivity
+5. **[docs/INTERN_ACCESS_CHECKLIST.md](./docs/INTERN_ACCESS_CHECKLIST.md)** - GitHub, Vercel, database access setup
+6. **[docs/INTERN_QUICK_REFERENCE.md](./docs/INTERN_QUICK_REFERENCE.md)** - Bookmark this for common commands
+
+**Quick setup:**
+```bash
+bash scripts/intern-setup.sh
+# Automates cloning all repos, installing deps, and verifying services
+```
+
+Your primary project is [ascent-placements-marketing](https://github.com/ypc-ux/ascent-placements-marketing) for your first week. After that, you'll dive into backend features in this repo (jbuilds) and other YPC-UX projects.
+
+---
+
 ## 📁 Project Structure
 
 ```
